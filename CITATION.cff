@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this reproducibility package, please cite it and the associated manuscript."
+title: "Detector jerárquico de entrelazamiento multiqubit desde funciones de Wigner Stratonovich-Weyl"
+type: software
+authors:
+  - family-names: "Casanova Benítez"
+    given-names: "Enrique E."
+  - family-names: "Berra Montiel"
+    given-names: "Oscar Jasel"
+repository-code: "https://github.com/enrik03/wigner-star-multiqubit-entanglement"
+url: "https://github.com/enrik03/wigner-star-multiqubit-entanglement"
+version: 0.1.0
+date-released: 2026-08-08
+keywords:
+  - Wigner functions
+  - Stratonovich-Weyl correspondence
+  - star product
+  - quantum entanglement
+  - partial transpose
+  - multipartite entanglement

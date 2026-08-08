@@ -1,0 +1,842 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools,bm}
+\usepackage{booktabs,array}
+\usepackage{microtype}
+\usepackage[margin=2.35cm]{geometry}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!45!black,citecolor=blue!45!black,urlcolor=blue!55!black}
+
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\id}{\mathbb I}
+\newcommand{\Tfun}{\mathfrak T}
+\newcommand{\W}{W}
+\newcommand{\Fstar}{F_{\star}}
+
+\newcommand{\Ngstar}{\mathcal N_{\mathrm{GME}}^{\star}}
+\newcommand{\Pstar}{\mathcal P_{\star}}
+\newcommand{\starprod}{\star}
+\newcommand{\dd}{\mathrm d}
+\newcommand{\e}{\mathrm e}
+
+\newtheorem{theorem}{Teorema}
+\newtheorem{proposition}[theorem]{Proposición}
+\newtheorem{lemma}[theorem]{Lema}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definición}
+\newtheorem{remark}[theorem]{Observación}
+
+\title{Detector jerárquico de entrelazamiento multiqubit\\
+desde funciones de Wigner Stratonovich--Weyl}
+\author{Enrique E. Casanova Benítez\\
+\small Universidad Autónoma de Santo Domingo (UASD), República Dominicana
+\and
+Oscar Jasel Berra Montiel\\
+\small Universidad Autónoma de San Luis Potosí (UASLP), México}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Construimos un detector jerárquico de entrelazamiento multiqubit cuyo dato de
+entrada es la función de Wigner de Stratonovich--Weyl (SW), no una matriz de
+densidad. La primera capa refleja las esferas de Bloch asociadas a una
+bipartición, calcula momentos mediante el producto estrella finito y reconstruye
+el espectro de la transposición parcial con identidades de Newton. El funcional
+$F_{\star}^{(S)}$ resultante es un criterio NPT exacto para cada corte, pero no
+certifica por sí solo entrelazamiento genuino multipartito (GME) de estados
+mixtos. Para cerrar esa brecha introducimos dos capas globales. La primera usa
+momentos estrella de mapas positivos sobre todo estado biseparable y define
+$\mathcal G_{\star,\ell}$ como la parte negativa del menor autovalor de una
+matriz de Hankel. Esta condición matricial es más informativa que utilizar solo
+el determinante de Hankel. La segunda formula enteramente en el álgebra SW el
+programa semidefinido de testigos completamente descomponibles y produce
+$\mathcal N_{\mathrm{GME}}^{\star}$, equivalente a la negatividad genuina y
+positivo exactamente fuera del conjunto de mezclas PPT. Verificamos la cadena
+desde símbolos de Wigner explícitos para GHZ$_3$, W$_3$, GHZ$_4$, familias con
+ruido blanco y una mezcla biseparable que es NPT en los tres cortes. GHZ$_4$
+se evalúa sobre sus siete biparticiones no redundantes. El error máximo entre los
+cálculos estrella y comprobaciones matriciales independientes es
+$9.1\times10^{-13}$. El resultado no se presenta como una nueva medida universal:
+$F_{\star}$ diagnostica NPT por corte, $\mathcal G_{\star,\ell}$ es un testigo
+suficiente dependiente del mapa y $\mathcal N_{\mathrm{GME}}^{\star}$ hereda las
+fortalezas y limitaciones de la relajación por mezclas PPT.
+\end{abstract}
+
+\noindent\textbf{Palabras clave:} función de Wigner; producto estrella;
+transposición parcial; entrelazamiento genuino multipartito; mezclas PPT;
+programación semidefinida.
+
+\section{Introducción}
+
+La representación de Wigner reemplaza operadores por funciones sobre un espacio
+de fase, pero conserva la no conmutatividad mediante un producto estrella
+\cite{Wigner1932,Groenewold1946,Moyal1949}. Para espines y sistemas de dimensión
+finita, la correspondencia de Stratonovich--Weyl proporciona un kernel
+autodual y covariante \cite{Stratonovich1957,Tilma2016ArbitraryWigner,
+RundleEveritt2021Overview}. Esta formulación se ha usado para dinámica,
+protocolos cuánticos y validación de correlaciones; en particular, el programa
+de cuantización por deformación de Berra-Montiel y colaboradores desarrolla el
+producto estrella de qubits y sus exponenciales
+\cite{SanchezCordovaBerraMontiel2024QET,BerraMontiel2026StarDynamics}.
+
+La negatividad puntual o el volumen negativo de una función de Wigner puede ser
+un testigo útil en familias concretas \cite{Arkhipov2018NegativityVolume}, pero no
+es, en general, una medida de entrelazamiento. Un estado separable puede tener
+una función cuasiprobabilística negativa y la no negatividad puntual tampoco
+garantiza separabilidad. Por ello buscamos funcionales que dependan de la
+estructura no local codificada en $W$ y del producto estrella, no solo del signo
+ordinario de $W$.
+
+Para dos qubits, la transposición parcial (PT) decide separabilidad
+\cite{Peres1996Separability,Horodecki1996Separability}. En el espacio de fase SW,
+PT es una reflexión de la componente $y$ de la esfera local y sus momentos se
+obtienen con potencias estrella
+\cite{Elben2020PTMoments,YuGuehne2021Hankel,Zhang2022PTMoments}. En sistemas
+mayores aparecen dos obstáculos.
+Primero, el determinante de la PT pierde información: varios autovalores
+negativos pueden dar determinante positivo y la deficiencia de rango puede
+forzar determinante cero. Segundo, aun una detección NPT exacta en todos los
+cortes no implica GME para estados mixtos. La razón es convexa: una mezcla de
+estados separables en cortes diferentes puede ser NPT en cada corte y seguir
+siendo biseparable \cite{GuhneToth2009Review,Jungnitsch2011PPTMixtures}.
+
+En este trabajo proponemos una arquitectura de tres capas:
+\begin{enumerate}
+\item $F_{\star}^{(S)}[W]$: reconstrucción espectral exacta y diagnóstico NPT en
+cada bipartición $S|S^c$;
+\item $\mathcal G_{\star,\ell}^{(\mathcal M)}[W]$: certificado GME de bajo orden
+obtenido de la positividad completa de matrices de Hankel asociadas a un mapa
+GME;
+\item $\mathcal N_{\mathrm{GME}}^{\star}[W]$: programa semidefinido SW de
+testigos completamente descomponibles, usado como capa global con información
+completa.
+\end{enumerate}
+La segunda capa traduce a espacio de fase los mapas GME y sus momentos
+\cite{HuberSengupta2014PositiveMaps,Clivaz2017GMEMaps,
+Mukherjee2025GMEMoments}. Nuestra elección de la parte negativa del menor
+autovalor de Hankel usa la condición demostrada, $H_\ell\succeq0$, en lugar de
+reducirla al escalar $\det H_\ell\geq0$. La tercera capa traduce la relajación de
+mezclas PPT de Jungnitsch, Moroder y Gühne \cite{Jungnitsch2011PPTMixtures} al
+cono positivo del álgebra estrella.
+
+La contribución es una síntesis SW verificable y una lógica de decisión que
+evita dos sobrerreclamos comunes: ni ``NPT en todos los cortes'' significa GME
+mixta, ni pertenecer al conjunto de mezclas PPT excluye todos los estados GME.
+La formulación es exacta como cambio de representación, pero no reduce por sí
+sola el costo de adquirir una función $W$ informacionalmente completa.
+
+\section{Álgebra de Wigner para \texorpdfstring{$N$}{N} qubits}
+
+\subsection{Kernel, medida y funcional de traza}
+
+Fijamos para cada qubit
+\begin{equation}
+ \Delta(\bm n)=\frac12\left(\id+\sqrt3\,\bm n\cdot\bm\sigma\right),
+ \qquad \bm n\in S^2,
+ \label{eq:kernel}
+\end{equation}
+con
+\begin{equation}
+ \dd\mu(\bm n)=\frac{\sin\theta\,\dd\theta\,\dd\phi}{4\pi},
+ \qquad \int_{S^2}\dd\mu=1,
+ \qquad \int_{S^2}\Delta\,\dd\mu=\frac{\id}{2}.
+ \label{eq:measure}
+\end{equation}
+Para un operador $A$ sobre $N$ qubits definimos
+\begin{equation}
+ W_A(\bm n_1,\ldots,\bm n_N)
+ =\Tr\!\left[A\,\Delta(\bm n_1)\otimes\cdots\otimes\Delta(\bm n_N)\right].
+ \label{eq:SWmap}
+\end{equation}
+La inversa y el funcional de traza son
+\begin{align}
+ A&=2^N\int W_A\,\Delta(\bm n_1)\otimes\cdots\otimes\Delta(\bm n_N)
+       \prod_{r=1}^{N}\dd\mu_r,\label{eq:inverse}\\
+ \Tfun_N[f]&:=2^N\int f\prod_{r=1}^{N}\dd\mu_r,
+ \qquad \Tfun_N[W_A]=\Tr A.\label{eq:tracefun}
+\end{align}
+Los factores $2^N$ no son opcionales: compensan exactamente
+$\int\Delta\dd\mu=\id/2$.
+
+\subsection{Producto estrella finito}
+
+El producto estrella se define por
+\begin{equation}
+ W_A\starprod W_B:=W_{AB}.
+ \label{eq:star-def}
+\end{equation}
+En la base local
+\begin{equation}
+ e_0=1,\qquad e_i=\sqrt3\,n_i=W_{\sigma_i},
+ \label{eq:e-basis}
+\end{equation}
+su tabla es finita:
+\begin{equation}
+ e_0\starprod e_\mu=e_\mu\starprod e_0=e_\mu,
+ \qquad
+ e_i\starprod e_j=\delta_{ij}e_0+i\epsilon_{ijk}e_k.
+ \label{eq:star-table}
+\end{equation}
+La regla se factoriza sobre los qubits. Si
+$\bm\mu=(\mu_1,\ldots,\mu_N)$ y
+$e_{\bm\mu}=\prod_r e_{\mu_r}(\bm n_r)$, entonces
+\begin{equation}
+ W_A=\sum_{\bm\mu}c_{\bm\mu}[A]e_{\bm\mu},
+ \qquad
+ c_{\bm\mu}[A]=2^{-N}\Tr(A\sigma_{\bm\mu}),
+ \qquad
+ A=\sum_{\bm\mu}c_{\bm\mu}[A]\sigma_{\bm\mu}.
+ \label{eq:coefficients}
+\end{equation}
+En particular,
+\begin{equation}
+ \Tfun_N[W_A\starprod W_B]=\Tr(AB).
+ \label{eq:star-trace}
+\end{equation}
+
+\subsection{La entrada operacional es \texorpdfstring{$W$}{W}}
+
+El algoritmo recibe los coeficientes $c_{\bm\mu}[W]$ o una representación
+equivalente de $W$. No requiere que se proporcione una matriz $\rho$. Para
+formular positividad sin abandonar el espacio de fase introducimos el cono
+\begin{equation}
+ \Pstar:=\left\{f=f^*:\;
+ \Tfun_N[g^*\starprod f\starprod g]\geq0
+ \ \text{para todo }g\right\}.
+ \label{eq:star-positive-cone}
+\end{equation}
+Escribimos $f\succeq_\star0$ si $f\in\Pstar$, y
+$0\preceq_\star f\preceq_\star1$ si $f$ y $1-f$ pertenecen a $\Pstar$.
+Por la biyección SW, $f\succeq_\star0$ es equivalente a positividad del elemento
+del álgebra representado por sus coeficientes. Así, una entrada física satisface
+\begin{equation}
+ W=W^*,\qquad W\succeq_\star0,\qquad \Tfun_N[W]=1.
+ \label{eq:physical-W}
+\end{equation}
+Esta positividad estrella no es positividad puntual: $W(\Omega)$ puede tomar
+valores negativos.
+
+\section{Capa I: espectroscopia NPT por corte}
+
+\subsection{Transposición parcial como reflexión}
+
+En la base computacional, $\sigma_x^T=\sigma_x$,
+$\sigma_y^T=-\sigma_y$ y $\sigma_z^T=\sigma_z$. Para una bipartición
+$S|S^c$, definimos
+\begin{equation}
+ (\Theta_SW)(\bm n_1,\ldots,\bm n_N)
+ =W(\bm n'_1,\ldots,\bm n'_N),
+ \qquad
+ \bm n'_r=\begin{cases}(n_{rx},-n_{ry},n_{rz}),&r\in S,\\
+ \bm n_r,&r\notin S.
+ \end{cases}
+ \label{eq:reflection}
+\end{equation}
+Entonces $\Theta_SW_A=W_{A^{T_S}}$. En coeficientes basta cambiar el signo de
+cada término que contenga un número impar de índices $y$ dentro de $S$.
+
+\subsection{Momentos estrella e identidades de Newton}
+
+Sea $d=2^N$. Los momentos reflejados son
+\begin{equation}
+ q_n^{(S)}[W]
+ :=\Tfun_N\!\left[(\Theta_SW)^{\starprod n}\right],
+ \qquad n=1,\ldots,d.
+ \label{eq:q-moments}
+\end{equation}
+Si $\lambda_1^{(S)},\ldots,\lambda_d^{(S)}$ son los valores espectrales del
+elemento reflejado, entonces
+\begin{equation}
+ q_n^{(S)}=\sum_{j=1}^{d}(\lambda_j^{(S)})^n.
+ \label{eq:power-sums}
+\end{equation}
+Los polinomios simétricos elementales se reconstruyen por
+\begin{equation}
+ e_0^{(S)}=1,\qquad
+ k e_k^{(S)}=\sum_{j=1}^{k}(-1)^{j-1}e_{k-j}^{(S)}q_j^{(S)},
+ \qquad k=1,\ldots,d.
+ \label{eq:newton}
+\end{equation}
+
+\begin{theorem}[Criterio NPT estrella exacto]
+Para cualquier entrada física $W$ y cualquier corte $S|S^c$, defínase
+\begin{equation}
+ \Fstar^{(S)}[W]:=\min_{1\leq k\leq d}e_k^{(S)}[W].
+ \label{eq:Fstar}
+\end{equation}
+Entonces
+\begin{equation}
+ \Fstar^{(S)}[W]\geq0
+ \iff \Theta_SW\succeq_\star0,
+ \qquad
+ \Fstar^{(S)}[W]<0
+ \iff \text{$W$ es NPT en el corte $S|S^c$}.
+ \label{eq:Fstar-theorem}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+La reflexión produce un elemento hermítico, por lo que sus raíces espectrales
+son reales. Si todas son no negativas, todos los $e_k$ son no negativos.
+Recíprocamente,
+\begin{equation}
+ P(t)=\prod_{j=1}^{d}(t+\lambda_j)
+ =t^d+e_1t^{d-1}+\cdots+e_d.
+\end{equation}
+Si todos los coeficientes son no negativos, $P(t)>0$ para todo $t>0$.
+Una raíz espectral negativa produciría la raíz positiva
+$t=-\lambda_j$, contradicción. Por tanto, todos los $e_k\geq0$ si y solo si el
+elemento reflejado es positivo.
+\end{proof}
+
+Para dos qubits, $e_4=\det(\rho^{T_B})$ tiene signo negativo exactamente en el
+caso entrelazado. Esta simplificación no sobrevive a dimensiones mayores. En un
+corte $2\otimes4$ puede haber hasta tres autovalores PT negativos
+\cite{Rana2013PartialTranspose,Johnston2013PTBound}; un número par de ellos da
+determinante positivo, y un cero da determinante nulo. Para GHZ$_3$, por ejemplo,
+el espectro reflejado es
+\begin{equation}
+ \left\{-\tfrac12,0,0,0,0,\tfrac12,\tfrac12,\tfrac12\right\},
+\end{equation}
+de modo que el determinante se anula aunque $\Fstar=-1/4$.
+
+\section{Por qué los cortes no resuelven la GME mixta}
+
+Un estado multipartito es biseparable si admite una descomposición convexa
+\begin{equation}
+ W_{\mathrm{bisep}}=\sum_{S\in\mathfrak B_N}\sum_j
+ p_{S,j}\,W_{S,j}^{\mathrm{sep}},
+ \label{eq:biseparable}
+\end{equation}
+donde $\mathfrak B_N$ contiene un representante de cada bipartición y cada
+término es separable en su corte, aunque cortes diferentes puedan aparecer en la
+misma mezcla. Un estado que no admite esta forma es genuinamente multipartito
+entrelazado.
+
+En estados puros, entrelazamiento en todo corte equivale a GME. Para estados
+mixtos no: la convexificación en la Ec.~\eqref{eq:biseparable} puede producir una
+mezcla NPT en todos los cortes. Además, en dimensiones $2\otimes4$ existen
+estados PPT entrelazados \cite{Horodecki1997BoundEntanglement}. Por tanto,
+\begin{equation}
+ \Fstar^{(S)}<0\ \forall S
+ \quad\nRightarrow\quad
+ \text{GME para estados mixtos}.
+ \label{eq:allcuts-not-gme}
+\end{equation}
+
+Una relajación convexa útil son las mezclas PPT:
+\begin{equation}
+ W_{\mathrm{PPTmix}}=\sum_{S\in\mathfrak B_N}p_S W_S,
+ \qquad \Theta_SW_S\succeq_\star0.
+ \label{eq:pptmixture}
+\end{equation}
+Todo estado biseparable es una mezcla PPT, así que demostrar que $W$ no pertenece
+a este conjunto certifica GME \cite{Jungnitsch2011PPTMixtures}. El recíproco no
+es universal: existen estados GME que pertenecen al conjunto de mezclas PPT;
+Ha y Kye construyen uno que es PPT respecto de una bipartición
+\cite{HaKye2016PPTGME}. Para estados permutacionalmente invariantes de tres
+qubits, en cambio, la relajación caracteriza la biseparabilidad
+\cite{Novo2013PermInvariant}.
+
+\section{Capa II: momentos estrella de mapas GME}
+
+\subsection{Mapa de transposición levantado}
+
+Los mapas positivos bipartitos pueden levantarse a mapas hermiticidad-preservantes
+que son positivos sobre todo estado biseparable
+\cite{HuberSengupta2014PositiveMaps,Clivaz2017GMEMaps}. Para qubits y el mapa de
+transposición, su forma SW es
+\begin{equation}
+ \mathcal M_T^{(N)}[W]
+ =\sum_{S\in\mathfrak B_N}\Theta_SW
+ +c_N\,\Tfun_N[W],1,
+ \qquad
+ c_N=\frac{2^{N-1}-2}{2}.
+ \label{eq:GME-map}
+\end{equation}
+La suma usa una sola orientación por bipartición, por lo que
+$|\mathfrak B_N|=2^{N-1}-1$. El mapa no preserva la traza: para una entrada
+normalizada,
+\begin{equation}
+ \Tfun_N[\mathcal M_T^{(N)}W]
+ =|\mathfrak B_N|+2^Nc_N.
+ \label{eq:map-trace}
+\end{equation}
+Así, el primer momento vale $3+8=11$ para $N=3$ y $7+48=55$ para $N=4$.
+Fijar estos valores evita mezclar momentos normalizados y no normalizados.
+
+\begin{lemma}[Positividad sobre el casco biseparable]
+Para todo símbolo físico biseparable $W$,
+\begin{equation}
+ \mathcal M_T^{(N)}[W]\succeq_\star0.
+ \label{eq:GME-map-positive}
+\end{equation}
+La afirmación permanece válida si cada término $\Theta_SW$ es seguido por una
+conjugación unitaria local fijada de antemano.
+\end{lemma}
+
+\begin{proof}
+En cualquier bipartición, todo autovalor de la transposición parcial de un
+estado normalizado está acotado inferiormente por $-1/2$. Para un estado puro,
+los autovalores potencialmente negativos son $-s_i s_j$, donde $s_i,s_j$ son
+coeficientes de Schmidt, y
+$s_i s_j\leq(s_i^2+s_j^2)/2\leq1/2$. La cota pasa a mezclas por concavidad del
+menor autovalor y no cambia bajo conjugación unitaria.
+
+Considérese primero un componente separable en un corte $S_0|S_0^c$. El término
+$\Theta_{S_0}W$ es positivo. Cada uno de los otros
+$|\mathfrak B_N|-1=2^{N-1}-2$ términos está acotado por
+$-\tfrac12\,1$. En consecuencia,
+\begin{equation}
+ \sum_{S\in\mathfrak B_N}\Theta_SW
+ \succeq_\star-\frac{2^{N-1}-2}{2}\,1,
+\end{equation}
+y el término $c_N\Tfun_N[W]1$ de la Ec.~\eqref{eq:GME-map} cancela exactamente
+esa cota. La linealidad extiende el resultado a todo el casco convexo
+biseparable.
+\end{proof}
+
+Para adaptar el mapa a ciertas clases puede componerse cada transposición con
+una conjugación unitaria local. En el ejemplo GHZ usamos
+\begin{equation}
+ \widetilde{\mathcal M}_T^{(3)}[W]
+ =\sum_{X=A,B,C}\mathcal U_x^{(X)}\Theta_XW+\Tfun_3[W],1,
+ \label{eq:modified-map}
+\end{equation}
+donde $\mathcal U_x$ deja $e_x$ invariante y cambia el signo de $e_y,e_z$ en el
+qubit correspondiente. Esta es la representación SW de la transposición seguida
+por conjugación con $\sigma_x$ \cite{Clivaz2017GMEMaps,
+Mukherjee2025GMEMoments}.
+
+\subsection{Jerarquía de Hankel}
+
+Para un mapa GME admisible $\mathcal M$, definimos
+\begin{equation}
+ s_n^{(\mathcal M)}[W]
+ :=\Tfun_N\!\left[(\mathcal M[W])^{\starprod n}\right],
+ \qquad
+ [H_\ell^{(\mathcal M)}]_{ij}=s_{i+j+1}^{(\mathcal M)},
+ \quad i,j=0,\ldots,\ell.
+ \label{eq:GME-moments}
+\end{equation}
+Se necesitan momentos hasta orden $2\ell+1$.
+
+\begin{theorem}[Certificado GME de Hankel]
+Si $W$ es biseparable, entonces
+\begin{equation}
+ H_\ell^{(\mathcal M)}[W]\succeq0
+ \qquad\text{para todo }\ell.
+ \label{eq:Hankel-positive}
+\end{equation}
+En consecuencia,
+\begin{equation}
+ \mathcal G_{\star,\ell}^{(\mathcal M)}[W]
+ :=\max\left\{0,-\lambda_{\min}
+ \bigl(H_\ell^{(\mathcal M)}[W]\bigr)\right\}>0
+ \quad\Longrightarrow\quad W\text{ es GME}.
+ \label{eq:Gstar}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Por construcción, $\mathcal M[W]\succeq_\star0$ para toda entrada biseparable.
+Sean $\lambda_r\geq0$ sus valores espectrales. Con
+$[V_\ell]_{ir}=\lambda_r^i$ se obtiene
+\begin{equation}
+ H_\ell=V_\ell\,\operatorname{diag}(\lambda_r)\,V_\ell^T\succeq0.
+\end{equation}
+La contraposición demuestra la segunda afirmación.
+\end{proof}
+
+La literatura reciente usa $\det H_\ell<0$ como condición suficiente
+\cite{Mukherjee2025GMEMoments}. Sin embargo, la demostración establece la
+condición matricial completa $H_\ell\succeq0$. Comprobar
+$\lambda_{\min}(H_\ell)<0$ es estrictamente más informativo que comprobar solo
+el signo del determinante: un número par de autovalores negativos o un cero
+puede ocultar la indefinición. En nuestros datos, $H_3$ del GHZ puro tiene
+determinante nulo y menor autovalor negativo. El funcional
+\eqref{eq:Gstar} no se reclama como monótono LOCC; es la profundidad de violación
+de un testigo de momentos para un mapa y un orden fijados.
+
+\section{Capa III: SDP de mezclas PPT en el álgebra estrella}
+
+\subsection{Testigos completamente descomponibles}
+
+Un símbolo real $w$ es completamente descomponible si, para cada
+$S\in\mathfrak B_N$, existen $p_S,q_S$ tales que
+\begin{equation}
+ w=p_S+\Theta_Sq_S,
+ \qquad
+ 0\preceq_\star p_S\preceq_\star1,
+ \qquad
+ 0\preceq_\star q_S\preceq_\star1.
+ \label{eq:fully-decomp}
+\end{equation}
+Definimos
+\begin{align}
+ \eta_\star[W]
+ &=\min_{w,\{p_S,q_S\}}
+ \Tfun_N[w\starprod W]
+ \quad\text{sujeto a \eqref{eq:fully-decomp}},\label{eq:eta-sdp}\\
+ \Ngstar[W]&:=\max\{0,-\eta_\star[W]\}.
+ \label{eq:Ngstar}
+\end{align}
+Esta normalización traslada al problema genuinamente multipartito la lógica de
+la negatividad bipartita basada en la norma de traza
+\cite{VidalWerner2002Negativity}, pero optimiza sobre testigos completamente
+descomponibles y no sobre un único corte.
+
+\begin{theorem}[Equivalencia con la negatividad genuina]
+El programa \eqref{eq:eta-sdp} es la imagen SW del SDP de testigos completamente
+descomponibles. Por tanto,
+\begin{equation}
+ \Ngstar[W]>0
+ \iff W\text{ no es una mezcla PPT}
+ \Longrightarrow W\text{ es GME}.
+ \label{eq:Ngstar-theorem}
+\end{equation}
+Además, $\Ngstar$ hereda convexidad, invariancia local y monotonía bajo LOCC de
+la negatividad genuina normalizada
+\cite{Jungnitsch2011PPTMixtures}.
+\end{theorem}
+
+\begin{proof}
+La regla de traza \eqref{eq:star-trace} transforma el objetivo en el valor
+esperado del testigo. La reflexión $\Theta_S$ representa exactamente PT y el
+cono $\Pstar$ representa positividad semidefinida. Así, cada restricción
+\eqref{eq:fully-decomp} es la imagen uno a uno de
+$\widehat w=P_S+Q_S^{T_S}$ con $0\leq P_S,Q_S\leq\id$. Para cualquier componente
+PPT en el corte $S$,
+\begin{equation}
+ \Tfun_N[w\starprod W_S]
+ =\Tfun_N[p_S\starprod W_S]
+ +\Tfun_N[q_S\starprod\Theta_SW_S]\geq0.
+\end{equation}
+Por convexidad ocurre lo mismo para toda mezcla PPT. El teorema de separación
+convexa proporciona un testigo completamente descomponible para cada punto
+fuera de ese conjunto \cite{Jungnitsch2011PPTMixtures}. La normalización acotada
+produce el monótono citado.
+\end{proof}
+
+En la implementación, si
+$f=\sum_{\bm\mu}c_{\bm\mu}e_{\bm\mu}$, la aplicación lineal
+\begin{equation}
+ \Gamma[f]=\sum_{\bm\mu}c_{\bm\mu}\sigma_{\bm\mu}
+ \label{eq:gamma-lmi}
+\end{equation}
+convierte $f\succeq_\star0$ en la LMI $\Gamma[f]\succeq0$. Esto no cambia el
+dato de entrada: el optimizador recibe los coeficientes de $W$ y usa
+\eqref{eq:gamma-lmi} como representación finita del cono estrella. El SDP se
+resuelve con métodos estándar \cite{VandenbergheBoyd1996SDP}.
+
+\section{Detector jerárquico y lógica de decisión}
+
+Resumimos la salida como
+\begin{equation}
+ \mathfrak D[W]=\left(
+ \{\Fstar^{(S)}\}_{S\in\mathfrak B_N},
+ \{\mathcal G_{\star,\ell}^{(\mathcal M)}\}_{\mathcal M,\ell},
+ \Ngstar\right).
+ \label{eq:hierarchical-detector}
+\end{equation}
+No comprimimos estas cantidades en un escalar universal, porque responden a
+preguntas lógicamente distintas.
+
+\begin{center}
+\small
+\begin{tabular}{p{0.31\linewidth}p{0.61\linewidth}}
+\toprule
+Resultado & Conclusión válida \\
+\midrule
+$\Fstar^{(S)}<0$ & Entrelazamiento NPT certificado en $S|S^c$.\\
+$\Fstar^{(S)}\geq0$ & PPT en ese corte; separabilidad no garantizada.\\
+$\Fstar^{(S)}<0$ en todo corte, $W$ puro & GME certificado.\\
+$\Fstar^{(S)}<0$ en todo corte, $W$ mixto & GME no decidida: puede ser una mezcla biseparable.\\
+$\mathcal G_{\star,\ell}^{(\mathcal M)}>0$ & GME certificada por momentos del mapa $\mathcal M$.\\
+$\Ngstar>0$ & Estado fuera de mezclas PPT; GME certificada.\\
+$\Ngstar=0$ & Mezcla PPT; en general GME todavía inconclusa.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+El protocolo Wigner-first es:
+\begin{enumerate}
+\item validar \eqref{eq:physical-W};
+\item para cada corte, reflejar $W$, calcular $q_1,\ldots,q_{2^N}$ y evaluar
+$\Fstar^{(S)}$;
+\item si la entrada es pura, usar los cortes para decidir GME;
+\item si es mixta, evaluar una familia especificada de mapas GME y aumentar
+$\ell$ hasta detectar o alcanzar el presupuesto de momentos;
+\item con información completa, resolver \eqref{eq:eta-sdp};
+\item devolver también ``inconcluso'' cuando ninguna implicación anterior sea
+aplicable.
+\end{enumerate}
+
+La primera capa necesita hasta $2^N$ momentos por corte si se desea completitud
+NPT. La segunda puede detenerse en bajo orden, pero su éxito depende del mapa y
+del estado. La tercera usa $4^N$ coeficientes y LMIs de tamaño $2^N$, por lo que
+no elimina el escalamiento exponencial. Si los momentos se miden directamente
+mediante protocolos multicopia o mediciones aleatorias, la capa de Hankel puede
+evitar reconstrucción completa \cite{Elben2020PTMoments,YuGuehne2021Hankel,
+Neven2021MomentHierarchy,Mukherjee2025GMEMoments}; esa ventaja experimental no se
+deduce solo de disponer de una tabla completa de $W$.
+
+\section{Ejemplos desde funciones de Wigner explícitas}
+
+Todos los ejemplos siguientes entran al código como coeficientes de $W$. Las
+matrices asociadas se construyen únicamente después, para comprobaciones
+independientes y para representar las LMIs del SDP.
+
+\subsection{GHZ de tres qubits}
+
+Con $e_{ir}=\sqrt3 n_{ir}$,
+\begin{align}
+ W_{\mathrm{GHZ}}=\frac18\bigl[&1+e_{zA}e_{zB}+e_{zA}e_{zC}+e_{zB}e_{zC}
+ +e_{xA}e_{xB}e_{xC}\nonumber\\
+ &-e_{xA}e_{yB}e_{yC}-e_{yA}e_{xB}e_{yC}
+ -e_{yA}e_{yB}e_{xC}\bigr].
+ \label{eq:W-GHZ}
+\end{align}
+La capa de cortes da $\Fstar^{(A)}=\Fstar^{(B)}=\Fstar^{(C)}=-1/4$.
+El mapa modificado \eqref{eq:modified-map} tiene menor autovalor $-1/2$ y
+$H_1$ ya es indefinida, con $\lambda_{\min}(H_1)=-0.1439418$. El SDP produce
+$\Ngstar=0.5$.
+
+\subsection{Estado W de tres qubits}
+
+Una forma compacta es
+\begin{align}
+ W_{\mathrm W}=\frac18\bigg[&1+\frac13\sum_i e_{zi}
+ -\frac13\sum_{i<j}e_{zi}e_{zj}-e_{zA}e_{zB}e_{zC}\nonumber\\
+ &+\frac23\sum_{i<j}(e_{xi}e_{xj}+e_{yi}e_{yj})\nonumber\\
+ &+\frac23\sum_{\mathrm{cyc}(i,j,k)}e_{zk}
+ (e_{xi}e_{xj}+e_{yi}e_{yj})\bigg].
+ \label{eq:W-W}
+\end{align}
+Se obtiene $\Fstar^{(S)}=-2/9$ para los tres cortes. El mapa no modificado
+presenta menor autovalor $-0.1547005$. $H_1$ permanece positiva, pero
+$\lambda_{\min}(H_2)=-0.0411283$ certifica GME con momentos hasta quinto orden.
+El SDP da $\Ngstar=0.4428090$.
+
+\subsection{Extensión explícita a cuatro qubits}
+
+Para demostrar que la construcción no depende de una peculiaridad de tres
+qubits, traducimos al álgebra Wigner-star el ejemplo GHZ$_4$ de
+Mukherjee \emph{et al.}~\cite{Mukherjee2025GMEMoments} y lo introducimos
+directamente mediante
+\begin{align}
+ W_{\mathrm{GHZ}_4}=\frac1{16}\bigg[&1+\sum_{i<j}e_{zi}e_{zj}
+ +e_{zA}e_{zB}e_{zC}e_{zD}+\prod_i e_{xi}+\prod_i e_{yi}\nonumber\\
+ &-\sum_{i<j}e_{yi}e_{yj}\!\prod_{r\notin\{i,j\}}e_{xr}\bigg].
+ \label{eq:W-GHZ4}
+\end{align}
+La fórmula contiene las cadenas $I/Z$ con un número par de factores $Z$ y las
+cadenas $X/Y$ con un número par de factores $Y$, con signo
+$(-1)^{N_Y/2}$. Las cuatro particiones $1|3$ y las tres particiones $2|2$ dan
+$\Fstar^{(S)}=-1/4$ y negatividad $1/2$. El mapa modificado tiene menor
+autovalor $-1/2$: $H_1$ es positiva, mientras
+$\lambda_{\min}(H_2)=-0.6337602$ certifica GME. El SDP produce
+$\Ngstar=0.499999993$.
+
+\subsection{Contraejemplo biseparable NPT en todos los cortes}
+
+Definimos directamente
+\begin{equation}
+ W_{\mathrm{bs}}
+ =\frac1{24}\sum_{\mathrm{cyc}(i,j,k)}
+ \left(1+e_{xi}e_{xj}-e_{yi}e_{yj}+e_{zi}e_{zj}\right)(1+e_{zk}).
+ \label{eq:W-biseparable}
+\end{equation}
+Cada sumando es el símbolo de Bell $\Phi^+$ en un par y $|0\rangle$ en el
+qubit restante; por construcción, la mezcla es biseparable. Sin embargo,
+\begin{equation}
+ \Fstar^{(A)}=\Fstar^{(B)}=\Fstar^{(C)}=-\frac1{54}<0.
+\end{equation}
+La capa de mapas no produce falso positivo: el menor autovalor de
+$\mathcal M_T^{(3)}[W_{\mathrm{bs}}]$ es $2/3$, las matrices
+$H_1,H_2,H_3$ son positivas y $\Ngstar=0$ dentro de la precisión del solver.
+Este ejemplo demuestra por qué los cortes deben conservarse como diagnóstico
+local y no como clasificador GME mixto.
+
+\subsection{Ruido blanco}
+
+Para $\psi\in\{\mathrm{GHZ},\mathrm W\}$ usamos la entrada explícita
+\begin{equation}
+ W_{\psi}(\mu)=\mu W_\psi+(1-\mu)\frac18,
+ \qquad 0\leq\mu\leq1.
+ \label{eq:white-noise-W}
+\end{equation}
+La Tabla~\ref{tab:examples} resume seis pruebas. Un guion en la columna Hankel
+significa que ninguna de $H_1,H_2,H_3$ detecta, no que el estado sea
+biseparable.
+
+\begin{table}[ht]
+\centering
+\caption{Resultados obtenidos desde coeficientes explícitos de $W$. En estados
+simétricos se reporta el valor común de todos los cortes no redundantes.}
+\label{tab:examples}
+\small
+\begin{tabular}{lrrrrl}
+\toprule
+Entrada & $\Fstar$ & $\lambda_{\min}(\mathcal M W)$ & primer $H_\ell$ & $\Ngstar$ & conclusión \\
+\midrule
+GHZ$_3$ & $-0.250000$ & $-0.500000$ & $H_1$ & $0.500000$ & GME \\
+W$_3$ & $-0.222222$ & $-0.154701$ & $H_2$ & $0.442809$ & GME \\
+GHZ$_4$ & $-0.250000$ & $-0.500000$ & $H_2$ & $0.500000$ & GME \\
+$W_{\mathrm{bs}}$ & $-0.018519$ & $+0.666667$ & -- & $0$ & biseparable \\
+GHZ$_3(0.50)$ & $-0.008331$ & $+0.437500$ & -- & $0.062500$ & GME por SDP \\
+W$_3(0.90)$ & $-0.158938$ & $-0.001730$ & -- & $0.345225$ & GME; Hankel $\ell\leq3$ inconcluso \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Los umbrales numéricos de visibilidad se muestran en la
+Tabla~\ref{tab:thresholds}. El mapa completo detecta antes o igual que cualquier
+truncación. Para W$_3$, $H_3$ se aproxima al umbral del mapa pero conserva una
+pequeña brecha; esto cuantifica que un número finito de momentos puede ser
+inconcluso incluso cuando el mapa completo ya es no positivo.
+
+\begin{table}[ht]
+\centering
+\caption{Menor $\mu$ detectado para las familias de la
+Ec.~\eqref{eq:white-noise-W}. ``No detecta'' significa que el nivel no detecta
+ni siquiera en $\mu=1$.}
+\label{tab:thresholds}
+\small
+\begin{tabular}{lcccc}
+\toprule
+Familia / mapa & mapa completo & $H_1$ & $H_2$ & $H_3$ \\
+\midrule
+GHZ$_3$ / modificado & $0.733333334$ & $0.934266784$ & $0.733333335$ & $0.733333334$ \\
+W$_3$ / transposición & $0.898868744$ & no detecta & $0.953490622$ & $0.900474281$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Validación numérica y reproducibilidad}
+
+El archivo \path{scripts/verify_detector_jerarquico.py} implementa la tabla
+local \eqref{eq:star-table}, la reflexión, las potencias estrella, Newton, los
+mapas GME y el SDP. Las entradas GHZ$_3$, W$_3$, GHZ$_4$ y biseparable se
+codifican mediante las Ecs.~\eqref{eq:W-GHZ}, \eqref{eq:W-W},
+\eqref{eq:W-GHZ4} y \eqref{eq:W-biseparable}. El archivo
+\path{scripts/validate_results.py} constituye una puerta separada que falla
+ante inconsistencias o falsos positivos conocidos. Los comandos son
+{\footnotesize
+\begin{verbatim}
+python -m pip install -r requirements.txt
+python scripts/verify_detector_jerarquico.py
+python scripts/validate_results.py
+python scripts/verify_four_qubit_extension.py
+\end{verbatim}
+}
+Las salidas completas se guardan en
+{\small\path{results/detector_jerarquico_checks.json}} y
+{\small\path{results/four_qubit_extension.json}}.\par
+Las comprobaciones incluyen:
+\begin{enumerate}
+\item reconstrucción de una entrada física y retorno de coeficientes;
+\item igualdad entre momentos estrella y trazas de potencias calculadas por una
+vía matricial independiente;
+\item igualdad entre el mapa aplicado a coeficientes SW y su acción matricial;
+\item ausencia de falsos positivos sobre la mezcla biseparable;
+\item evaluación de las siete biparticiones no redundantes de GHZ$_4$;
+\item solución de los SDP con CLARABEL y respaldo previsto con SCS.
+\end{enumerate}
+La puerta de integridad pasa y el máximo error entre representaciones es
+$9.094947\times10^{-13}$. Este error aparece en momentos de orden alto del mapa;
+los momentos PT por corte concuerdan típicamente a nivel de redondeo
+$10^{-16}$.
+
+\section{Discusión}
+
+\subsection{Qué mejora respecto al detector por determinante}
+
+La mejora no consiste en reemplazar un determinante por otro. En la primera
+capa, la familia completa $\{e_k^{(S)}\}$ evita los fallos de paridad y rango de
+$\det(\Theta_SW)$. En la segunda, la condición
+$\lambda_{\min}(H_\ell)<0$ usa toda la positividad de Hankel y evita repetir el
+mismo fallo de paridad sobre $\det H_\ell$. En la tercera, el problema global se
+formula sobre el casco convexo de estados PPT por cortes, que contiene la
+información de descomposición ausente en una lista de espectros PT separados.
+
+\subsection{Alcance de cada cantidad}
+
+$\Fstar^{(S)}$ es un funcional espectral exacto de NPT por corte, no una medida
+LOCC universal. $\mathcal G_{\star,\ell}^{(\mathcal M)}$ es un certificado suficiente y
+depende de la elección del mapa y del orden; cero significa ``no detectado''.
+$\Ngstar$ sí es un monótono heredado del SDP de negatividad genuina, pero su
+positividad caracteriza estar fuera de las mezclas PPT, no todo el conjunto GME.
+Esta separación de roles es deliberada.
+
+\subsection{Limitaciones abiertas}
+
+\begin{enumerate}
+\item Los mapas de transposición usados aquí son descomponibles y no detectan
+GME PPT. Mapas indecomponibles podrían ampliar la segunda capa, pero requieren
+una construcción SW y una validación propia.
+\item Una mezcla PPT puede ser GME; por ello $\Ngstar=0$ no es una prueba de
+biseparabilidad salvo en clases especiales, como los estados
+permutacionalmente invariantes de tres qubits.
+\item La selección entre el mapa estándar y el modificado usa conocimiento de
+familias GHZ/W. Una biblioteca de mapas o una optimización sobre mapas admisibles
+es un problema posterior.
+\item La adquisición de $W$ completa requiere $4^N-1$ parámetros reales. El
+beneficio experimental de momentos truncados debe demostrarse con un protocolo
+de medición concreto y análisis de varianza.
+\item Newton puede ser numéricamente mal condicionado cerca de la frontera PPT
+o para $N$ grande. Intervalos certificados, SDP de momentos o reconstrucción
+espectral estable deben acompañar datos ruidosos.
+\item Todo el formalismo numérico usa el kernel de la Ec.~\eqref{eq:kernel}. Un
+cambio de kernel o medida exige transformar la normalización de $\Tfun_N$ y la
+tabla estrella.
+\end{enumerate}
+
+\section{Conclusiones}
+
+Hemos construido una versión multiqubit del detector Wigner-star que distingue
+tres preguntas: NPT por corte, certificación GME con pocos momentos y exclusión
+global del conjunto de mezclas PPT. La primera capa es exacta cuando se conocen
+los $2^N$ momentos requeridos. La prueba GHZ$_4$ verifica explícitamente las
+siete biparticiones no redundantes sin reconstruir primero $\rho$. La segunda
+produce el funcional
+$\mathcal G_{\star,\ell}$ a partir del menor autovalor de Hankel y puede certificar GHZ y
+W con momentos de tercer y quinto orden, respectivamente. La tercera realiza el
+SDP de testigos completamente descomponibles directamente sobre símbolos SW y
+evita el falso positivo de la mezcla biseparable NPT en todos los cortes.
+
+La formulación conserva como dato operacional a $W$ y hace explícita cada
+normalización. Su principal valor es organizativo y metodológico: integra
+espectroscopia PT, mapas GME y geometría convexa en una sola álgebra de fase sin
+presentar como universal lo que solo es suficiente. El siguiente paso con mayor
+valor científico es construir mapas indecomponibles en la base SW y comparar, con
+un modelo de medición realista, el costo de estimar $\mathcal G_{\star,\ell}$ frente a
+tomografía completa y testigos convencionales.
+
+\section*{Disponibilidad de datos y código}
+
+El código, los parámetros de los ejemplos y las salidas JSON están disponibles
+en el repositorio público
+\url{https://github.com/enrik03/wigner-star-multiqubit-entanglement}. La versión
+asociada al envío se archivará en un repositorio de preservación para asignarle
+un DOI. No se emplearon datos experimentales.
+
+\section*{Declaraciones}
+
+Los autores declaran no tener intereses en competencia. No se recibió
+financiación específica para este estudio. E.E.C.B. y O.J.B.M. contribuyeron a
+la conceptualización; E.E.C.B. desarrolló la implementación y la primera
+redacción; ambos autores deberán revisar y aprobar la versión sometida.
+
+{\small
+\bibliographystyle{unsrt}
+\bibliography{references}
+}
+
+\end{document}

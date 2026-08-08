@@ -1,0 +1,25 @@
+# LaTeX build products (the reviewed main.pdf is intentionally tracked)
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.xdv
+
+# Python and local environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Local visual inspection artifacts
+tmp/
+
+# Editor and operating-system metadata
+.DS_Store
+Thumbs.db
+*.swp
+*~

@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "checked_examples": [
+    "GHZ3",
+    "GHZ3_ruidoso_mu_0.50",
+    "GHZ4",
+    "W3",
+    "W3_ruidoso_mu_0.90",
+    "mezcla_biseparable_Bell"
+  ],
+  "cited_keys": 27,
+  "bib_entries": 27,
+  "ghz4_nonredundant_cuts": 7,
+  "failures": []
+}

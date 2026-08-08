@@ -1,0 +1,885 @@
+{
+  "conventions": {
+    "kernel": "Delta=(I+sqrt(3)n.sigma)/2",
+    "measure": "dmu=sin(theta)dtheta dphi/(4pi)",
+    "trace_functional": "T_N[f]=2^N integral f",
+    "hankel_score": "G_star,l=max(0,-lambda_min(H_l))",
+    "ppt_mixture_score": "genuine negativity from fully decomposable witnesses"
+  },
+  "examples": [
+    {
+      "name": "GHZ3",
+      "primary_input": "explicit_Wigner_coefficients",
+      "validation": {
+        "trace": 1.0,
+        "min_eigenvalue": 0.0,
+        "purity": 1.0,
+        "max_coefficient_roundtrip_error": 0.0,
+        "valid_density_operator": true
+      },
+      "cut_layer": [
+        {
+          "cut": "A",
+          "q_star": [
+            1.0,
+            1.0,
+            0.25,
+            0.25,
+            0.0625,
+            0.0625,
+            0.015625,
+            0.015625
+          ],
+          "e_newton": [
+            1.0,
+            0.0,
+            -0.25,
+            -0.0625,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "f_star": -0.25,
+          "pt_eigenvalues": [
+            -0.5,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.5,
+            0.5,
+            0.5
+          ],
+          "negativity": 0.5,
+          "max_star_matrix_moment_error": 0.0
+        },
+        {
+          "cut": "B",
+          "q_star": [
+            1.0,
+            1.0,
+            0.25,
+            0.25,
+            0.0625,
+            0.0625,
+            0.015625,
+            0.015625
+          ],
+          "e_newton": [
+            1.0,
+            0.0,
+            -0.25,
+            -0.0625,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "f_star": -0.25,
+          "pt_eigenvalues": [
+            -0.5,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.5,
+            0.5,
+            0.5
+          ],
+          "negativity": 0.5,
+          "max_star_matrix_moment_error": 0.0
+        },
+        {
+          "cut": "C",
+          "q_star": [
+            1.0,
+            1.0,
+            0.25,
+            0.25,
+            0.0625,
+            0.0625,
+            0.015625,
+            0.015625
+          ],
+          "e_newton": [
+            1.0,
+            0.0,
+            -0.25,
+            -0.0625,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "f_star": -0.25,
+          "pt_eigenvalues": [
+            -0.5,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.5,
+            0.5,
+            0.5
+          ],
+          "negativity": 0.5,
+          "max_star_matrix_moment_error": 0.0
+        }
+      ],
+      "all_cuts_npt": true,
+      "gme_moment_layer": {
+        "map": "modified_transposition",
+        "map_min_eigenvalue": -0.4999999999999999,
+        "map_certifies_gme": true,
+        "map_moments_star": [
+          11.0,
+          20.0,
+          35.75,
+          69.5,
+          143.1875,
+          312.5,
+          712.859375
+        ],
+        "levels": [
+          {
+            "level": 1,
+            "moments_used": 3,
+            "min_hankel_eigenvalue": -0.14394183418973583,
+            "hankel_determinant": -6.749999999999971,
+            "g_star_hankel": 0.14394183418973583,
+            "certifies_gme": true
+          },
+          {
+            "level": 2,
+            "moments_used": 5,
+            "min_hankel_eigenvalue": -0.5863842966015038,
+            "hankel_determinant": -405.0000000000009,
+            "g_star_hankel": 0.5863842966015038,
+            "certifies_gme": true
+          },
+          {
+            "level": 3,
+            "moments_used": 7,
+            "min_hankel_eigenvalue": -0.5937482995931639,
+            "hankel_determinant": 0.0,
+            "g_star_hankel": 0.5937482995931639,
+            "certifies_gme": true
+          }
+        ],
+        "max_symbol_matrix_map_error": 0.0,
+        "max_star_matrix_moment_error": 0.0
+      },
+      "ppt_mixture_sdp": {
+        "available": true,
+        "status": "optimal",
+        "solver": "CLARABEL",
+        "optimal_witness_expectation": -0.49999999882032814,
+        "genuine_negativity": 0.49999999882032814,
+        "certifies_not_ppt_mixture": true
+      }
+    },
+    {
+      "name": "W3",
+      "primary_input": "explicit_Wigner_coefficients",
+      "validation": {
+        "trace": 1.0,
+        "min_eigenvalue": 0.0,
+        "purity": 1.0,
+        "max_coefficient_roundtrip_error": 6.938893903907228e-18,
+        "valid_density_operator": true
+      },
+      "cut_layer": [
+        {
+          "cut": "A",
+          "q_star": [
+            1.0,
+            1.0,
+            0.3333333333333333,
+            0.308641975308642,
+            0.1358024691358025,
+            0.11111111111111109,
+            0.05898491083676269,
+            0.04404816338972717
+          ],
+          "e_newton": [
+            1.0,
+            0.0,
+            -0.22222222222222224,
+            -0.049382716049382734,
+            -4.163336342344337e-18,
+            9.71445146547012e-18,
+            6.443258625056712e-18,
+            5.018307198361477e-19
+          ],
+          "f_star": -0.22222222222222224,
+          "pt_eigenvalues": [
+            -0.4714045207910317,
+            -6.861555643110587e-17,
+            0.0,
+            2.7755575615628914e-17,
+            1.7963785889362138e-16,
+            0.33333333333333326,
+            0.4714045207910317,
+            0.6666666666666666
+          ],
+          "negativity": 0.4714045207910317,
+          "max_star_matrix_moment_error": 1.1102230246251565e-16
+        },
+        {
+          "cut": "B",
+          "q_star": [
+            1.0,
+            1.0,
+            0.33333333333333337,
+            0.30864197530864196,
+            0.13580246913580246,
+            0.11111111111111108,
+            0.05898491083676269,
+            0.044048163389727155
+          ],
+          "e_newton": [
+            1.0,
+            0.0,
+            -0.2222222222222222,
+            -0.0493827160493827,
+            2.7755575615628915e-18,
+            4.625929269271486e-19,
+            3.1390234327199367e-18,
+            2.8354468244239953e-18
+          ],
+          "f_star": -0.2222222222222222,
+          "pt_eigenvalues": [
+            -0.4714045207910317,
+            -3.1920226123569336e-17,
+            0.0,
+            2.7755575615628914e-17,
+            5.967580173919822e-17,
+            0.3333333333333333,
+            0.4714045207910317,
+            0.6666666666666665
+          ],
+          "negativity": 0.4714045207910317,
+          "max_star_matrix_moment_error": 2.220446049250313e-16
+        },
+        {
+          "cut": "C",
+          "q_star": [
+            1.0,
+            1.0,
+            0.3333333333333333,
+            0.30864197530864196,
+            0.13580246913580246,
+            0.11111111111111108,
+            0.058984910836762675,
+            0.04404816338972716
+          ],
+          "e_newton": [
+            1.0,
+            0.0,
+            -0.22222222222222224,
+            -0.04938271604938272,
+            4.163336342344337e-18,
+            6.476300976980079e-18,
+            3.3042351923367752e-18,
+            -6.195440985631408e-21
+          ],
+          "f_star": -0.22222222222222224,
+          "pt_eigenvalues": [
+            -0.4714045207910317,
+            0.0,
+            0.0,
+            0.0,
+            2.7755575615628914e-17,
+            0.33333333333333326,
+            0.4714045207910317,
+            0.6666666666666666
+          ],
+          "negativity": 0.4714045207910317,
+          "max_star_matrix_moment_error": 1.1102230246251565e-16
+        }
+      ],
+      "all_cuts_npt": true,
+      "gme_moment_layer": {
+        "map": "transposition",
+        "map_min_eigenvalue": -0.15470053837925124,
+        "map_certifies_gme": true,
+        "map_moments_star": [
+          11.0,
+          20.333333333333343,
+          41.22222222222223,
+          90.55555555555556,
+          210.01234567901236,
+          505.5349794238684,
+          1248.9917695473255
+        ],
+        "levels": [
+          {
+            "level": 1,
+            "moments_used": 3,
+            "min_hankel_eigenvalue": 0.777534114232239,
+            "hankel_determinant": 39.99999999999968,
+            "g_star_hankel": 0.0,
+            "certifies_gme": false
+          },
+          {
+            "level": 2,
+            "moments_used": 5,
+            "min_hankel_eigenvalue": -0.04112829631498231,
+            "hankel_determinant": -46.00274348423008,
+            "g_star_hankel": 0.04112829631498231,
+            "certifies_gme": true
+          },
+          {
+            "level": 3,
+            "moments_used": 7,
+            "min_hankel_eigenvalue": -0.05584467653786525,
+            "hankel_determinant": -357.1006377001547,
+            "g_star_hankel": 0.05584467653786525,
+            "certifies_gme": true
+          }
+        ],
+        "max_symbol_matrix_map_error": 1.1102230246251565e-16,
+        "max_star_matrix_moment_error": 9.094947017729282e-13
+      },
+      "ppt_mixture_sdp": {
+        "available": true,
+        "status": "optimal",
+        "solver": "CLARABEL",
+        "optimal_witness_expectation": -0.4428090409613823,
+        "genuine_negativity": 0.4428090409613823,
+        "certifies_not_ppt_mixture": true
+      }
+    },
+    {
+      "name": "mezcla_biseparable_Bell",
+      "primary_input": "explicit_Wigner_coefficients",
+      "validation": {
+        "trace": 1.0,
+        "min_eigenvalue": -3.469446951953614e-17,
+        "purity": 0.5000000000000001,
+        "max_coefficient_roundtrip_error": 6.938893903907228e-18,
+        "valid_density_operator": true
+      },
+      "cut_layer": [
+        {
+          "cut": "A",
+          "q_star": [
+            1.0,
+            0.5000000000000001,
+            0.19444444444444448,
+            0.11265432098765432,
+            0.059927983539094634,
+            0.034336419753086406,
+            0.01932584590763603,
+            0.011013231595793321
+          ],
+          "e_newton": [
+            1.0,
+            0.24999999999999994,
+            -0.018518518518518563,
+            -0.015432098765432101,
+            -0.00205761316872428,
+            -8.573388203017859e-05,
+            1.4036545983071262e-18,
+            8.70023841536917e-19
+          ],
+          "f_star": -0.018518518518518563,
+          "pt_eigenvalues": [
+            -0.23570226039551584,
+            0.0,
+            1.2793585635328952e-17,
+            0.09763107293781753,
+            0.16666666666666669,
+            0.16666666666666669,
+            0.23570226039551584,
+            0.5690355937288492
+          ],
+          "negativity": 0.23570226039551584,
+          "max_star_matrix_moment_error": 1.1102230246251565e-16
+        },
+        {
+          "cut": "B",
+          "q_star": [
+            1.0,
+            0.5000000000000001,
+            0.19444444444444442,
+            0.11265432098765432,
+            0.059927983539094634,
+            0.03433641975308641,
+            0.019325845907636027,
+            0.011013231595793321
+          ],
+          "e_newton": [
+            1.0,
+            0.24999999999999994,
+            -0.018518518518518583,
+            -0.015432098765432122,
+            -0.002057613168724285,
+            -8.573388203017938e-05,
+            -9.680376540049147e-21,
+            8.518731355243249e-20
+          ],
+          "f_star": -0.018518518518518583,
+          "pt_eigenvalues": [
+            -0.23570226039551584,
+            0.0,
+            0.0,
+            0.09763107293781753,
+            0.16666666666666666,
+            0.16666666666666669,
+            0.23570226039551584,
+            0.5690355937288492
+          ],
+          "negativity": 0.23570226039551584,
+          "max_star_matrix_moment_error": 1.1102230246251565e-16
+        },
+        {
+          "cut": "C",
+          "q_star": [
+            1.0,
+            0.5000000000000001,
+            0.19444444444444442,
+            0.11265432098765432,
+            0.059927983539094634,
+            0.034336419753086406,
+            0.019325845907636023,
+            0.01101323159579332
+          ],
+          "e_newton": [
+            1.0,
+            0.24999999999999994,
+            -0.018518518518518583,
+            -0.015432098765432122,
+            -0.002057613168724285,
+            -8.573388203017823e-05,
+            6.505213034913027e-19,
+            9.571472303973594e-20
+          ],
+          "f_star": -0.018518518518518583,
+          "pt_eigenvalues": [
+            -0.23570226039551584,
+            0.0,
+            1.2793585635328952e-17,
+            0.09763107293781753,
+            0.16666666666666669,
+            0.16666666666666669,
+            0.23570226039551584,
+            0.5690355937288492
+          ],
+          "negativity": 0.23570226039551584,
+          "max_star_matrix_moment_error": 1.1102230246251565e-16
+        }
+      ],
+      "all_cuts_npt": true,
+      "gme_moment_layer": {
+        "map": "transposition",
+        "map_min_eigenvalue": 0.6666666666666669,
+        "map_certifies_gme": false,
+        "map_moments_star": [
+          11.0,
+          17.833333333333336,
+          32.97222222222222,
+          67.45833333333334,
+          148.86651234567898,
+          346.7977109053498,
+          838.2706404320986
+        ],
+        "levels": [
+          {
+            "level": 1,
+            "moments_used": 3,
+            "min_hankel_eigenvalue": 1.0404095204873949,
+            "hankel_determinant": 44.6666666666666,
+            "g_star_hankel": 0.0,
+            "certifies_gme": false
+          },
+          {
+            "level": 2,
+            "moments_used": 5,
+            "min_hankel_eigenvalue": 0.08301653720482992,
+            "hankel_determinant": 77.77503429354735,
+            "g_star_hankel": 0.0,
+            "certifies_gme": false
+          },
+          {
+            "level": 3,
+            "moments_used": 7,
+            "min_hankel_eigenvalue": 0.0012195818353971095,
+            "hankel_determinant": 7.568687775198695,
+            "g_star_hankel": 0.0,
+            "certifies_gme": false
+          }
+        ],
+        "max_symbol_matrix_map_error": 5.551115123125783e-17,
+        "max_star_matrix_moment_error": 1.1368683772161603e-13
+      },
+      "ppt_mixture_sdp": {
+        "available": true,
+        "status": "optimal",
+        "solver": "CLARABEL",
+        "optimal_witness_expectation": 1.0314475801243006e-09,
+        "genuine_negativity": 0.0,
+        "certifies_not_ppt_mixture": false
+      }
+    },
+    {
+      "name": "GHZ3_ruidoso_mu_0.50",
+      "primary_input": "explicit_Wigner_coefficients",
+      "validation": {
+        "trace": 1.0,
+        "min_eigenvalue": 0.0625,
+        "purity": 0.34375,
+        "max_coefficient_roundtrip_error": 0.0,
+        "valid_density_operator": true
+      },
+      "cut_layer": [
+        {
+          "cut": "A",
+          "q_star": [
+            1.0,
+            0.34375,
+            0.0859375,
+            0.0299072265625,
+            0.0087127685546875,
+            0.002837657928466797,
+            0.0008649826049804688,
+            0.0002743769437074661
+          ],
+          "e_newton": [
+            1.0,
+            0.328125,
+            0.0234375,
+            -0.008331298828125,
+            -0.0018768310546875,
+            -0.00015616416931152344,
+            -5.9604644775390625e-06,
+            -8.731149137020111e-08
+          ],
+          "f_star": -0.008331298828125,
+          "pt_eigenvalues": [
+            -0.1875,
+            0.0625,
+            0.0625,
+            0.0625,
+            0.0625,
+            0.3125,
+            0.3125,
+            0.3125
+          ],
+          "negativity": 0.1875,
+          "max_star_matrix_moment_error": 0.0
+        },
+        {
+          "cut": "B",
+          "q_star": [
+            1.0,
+            0.34375,
+            0.0859375,
+            0.0299072265625,
+            0.0087127685546875,
+            0.002837657928466797,
+            0.0008649826049804688,
+            0.0002743769437074661
+          ],
+          "e_newton": [
+            1.0,
+            0.328125,
+            0.0234375,
+            -0.008331298828125,
+            -0.0018768310546875,
+            -0.00015616416931152344,
+            -5.9604644775390625e-06,
+            -8.731149137020111e-08
+          ],
+          "f_star": -0.008331298828125,
+          "pt_eigenvalues": [
+            -0.1875,
+            0.0625,
+            0.0625,
+            0.0625,
+            0.0625,
+            0.3125,
+            0.3125,
+            0.3125
+          ],
+          "negativity": 0.1875,
+          "max_star_matrix_moment_error": 0.0
+        },
+        {
+          "cut": "C",
+          "q_star": [
+            1.0,
+            0.34375,
+            0.0859375,
+            0.0299072265625,
+            0.0087127685546875,
+            0.002837657928466797,
+            0.0008649826049804688,
+            0.0002743769437074661
+          ],
+          "e_newton": [
+            1.0,
+            0.328125,
+            0.0234375,
+            -0.008331298828125,
+            -0.0018768310546875,
+            -0.00015616416931152344,
+            -5.9604644775390625e-06,
+            -8.731149137020111e-08
+          ],
+          "f_star": -0.008331298828125,
+          "pt_eigenvalues": [
+            -0.1875,
+            0.0625,
+            0.0625,
+            0.0625,
+            0.0625,
+            0.3125,
+            0.3125,
+            0.3125
+          ],
+          "negativity": 0.1875,
+          "max_star_matrix_moment_error": 0.0
+        }
+      ],
+      "all_cuts_npt": true,
+      "gme_moment_layer": {
+        "map": "modified_transposition",
+        "map_min_eigenvalue": 0.4375,
+        "map_certifies_gme": false,
+        "map_moments_star": [
+          11.0,
+          16.34375,
+          25.1796875,
+          39.7486572265625,
+          64.14796447753906,
+          105.84811353683472,
+          178.59932160377502
+        ],
+        "levels": [
+          {
+            "level": 1,
+            "moments_used": 3,
+            "min_hankel_eigenvalue": 0.27456804452987527,
+            "hankel_determinant": 9.8583984375,
+            "g_star_hankel": 0.0,
+            "certifies_gme": false
+          },
+          {
+            "level": 2,
+            "moments_used": 5,
+            "min_hankel_eigenvalue": 0.03636371541561613,
+            "hankel_determinant": 4.1124572753906525,
+            "g_star_hankel": 0.0,
+            "certifies_gme": false
+          },
+          {
+            "level": 3,
+            "moments_used": 7,
+            "min_hankel_eigenvalue": 4.6658967850046544e-15,
+            "hankel_determinant": 2.490613763811934e-13,
+            "g_star_hankel": 0.0,
+            "certifies_gme": false
+          }
+        ],
+        "max_symbol_matrix_map_error": 0.0,
+        "max_star_matrix_moment_error": 0.0
+      },
+      "ppt_mixture_sdp": {
+        "available": true,
+        "status": "optimal",
+        "solver": "CLARABEL",
+        "optimal_witness_expectation": -0.062499999917010024,
+        "genuine_negativity": 0.062499999917010024,
+        "certifies_not_ppt_mixture": true
+      }
+    },
+    {
+      "name": "W3_ruidoso_mu_0.90",
+      "primary_input": "explicit_Wigner_coefficients",
+      "validation": {
+        "trace": 1.0,
+        "min_eigenvalue": 0.012499999999999994,
+        "purity": 0.83375,
+        "max_coefficient_roundtrip_error": 1.3877787807814457e-17,
+        "valid_density_operator": true
+      },
+      "cut_layer": [
+        {
+          "cut": "A",
+          "q_star": [
+            1.0,
+            0.83375,
+            0.2738124999999999,
+            0.21541660156250003,
+            0.09324187011718753,
+            0.06554764987182618,
+            0.033656266567993164,
+            0.02204998046528339
+          ],
+          "e_newton": [
+            1.0,
+            0.083125,
+            -0.15893750000000004,
+            -0.042461767578125045,
+            -0.0018723388671875057,
+            -3.353318786620264e-05,
+            -2.728759765609403e-07,
+            -8.404105900187902e-10
+          ],
+          "f_star": -0.15893750000000004,
+          "pt_eigenvalues": [
+            -0.4117640687119285,
+            0.012499999999999893,
+            0.012499999999999983,
+            0.012499999999999997,
+            0.012500000000000018,
+            0.31249999999999994,
+            0.4367640687119285,
+            0.6124999999999999
+          ],
+          "negativity": 0.4117640687119285,
+          "max_star_matrix_moment_error": 1.1102230246251565e-16
+        },
+        {
+          "cut": "B",
+          "q_star": [
+            1.0,
+            0.83375,
+            0.2738124999999999,
+            0.21541660156250003,
+            0.09324187011718753,
+            0.06554764987182618,
+            0.033656266567993164,
+            0.022049980465283392
+          ],
+          "e_newton": [
+            1.0,
+            0.083125,
+            -0.15893750000000004,
+            -0.042461767578125045,
+            -0.0018723388671875057,
+            -3.353318786620264e-05,
+            -2.728759765609403e-07,
+            -8.40410590452471e-10
+          ],
+          "f_star": -0.15893750000000004,
+          "pt_eigenvalues": [
+            -0.41176406871192844,
+            0.012499999999999905,
+            0.012499999999999956,
+            0.012499999999999997,
+            0.012499999999999997,
+            0.3125,
+            0.43676406871192847,
+            0.6125
+          ],
+          "negativity": 0.41176406871192844,
+          "max_star_matrix_moment_error": 1.6653345369377348e-16
+        },
+        {
+          "cut": "C",
+          "q_star": [
+            1.0,
+            0.83375,
+            0.2738124999999999,
+            0.21541660156250003,
+            0.09324187011718749,
+            0.06554764987182617,
+            0.033656266567993164,
+            0.022049980465283395
+          ],
+          "e_newton": [
+            1.0,
+            0.083125,
+            -0.15893750000000004,
+            -0.042461767578125045,
+            -0.001872338867187514,
+            -3.3533187866208645e-05,
+            -2.728759765593198e-07,
+            -8.404105893664491e-10
+          ],
+          "f_star": -0.15893750000000004,
+          "pt_eigenvalues": [
+            -0.4117640687119285,
+            0.012499999999999982,
+            0.012499999999999997,
+            0.012499999999999997,
+            0.012500000000000096,
+            0.31249999999999994,
+            0.4367640687119285,
+            0.6124999999999998
+          ],
+          "negativity": 0.4117640687119285,
+          "max_star_matrix_moment_error": 2.220446049250313e-16
+        }
+      ],
+      "all_cuts_npt": true,
+      "gme_moment_layer": {
+        "map": "transposition",
+        "map_min_eigenvalue": -0.0017304845413264047,
+        "map_certifies_gme": true,
+        "map_moments_star": [
+          11.0,
+          19.343750000000014,
+          37.42718750000003,
+          77.91566972656254,
+          170.9847308837891,
+          389.47341685421753,
+          911.0112494159944
+        ],
+        "levels": [
+          {
+            "level": 1,
+            "moments_used": 3,
+            "min_hankel_eigenvalue": 0.7875457723205539,
+            "hankel_determinant": 37.51839843749976,
+            "g_star_hankel": 0.0,
+            "certifies_gme": false
+          },
+          {
+            "level": 2,
+            "moments_used": 5,
+            "min_hankel_eigenvalue": 0.03220278513773217,
+            "hankel_determinant": 27.02191829203191,
+            "g_star_hankel": 0.0,
+            "certifies_gme": false
+          },
+          {
+            "level": 3,
+            "moments_used": 7,
+            "min_hankel_eigenvalue": 0.00012490517589661625,
+            "hankel_determinant": 0.46040754094986314,
+            "g_star_hankel": 0.0,
+            "certifies_gme": false
+          }
+        ],
+        "max_symbol_matrix_map_error": 4.440892098500626e-16,
+        "max_star_matrix_moment_error": 1.1368683772161603e-13
+      },
+      "ppt_mixture_sdp": {
+        "available": true,
+        "status": "optimal",
+        "solver": "CLARABEL",
+        "optimal_witness_expectation": -0.3452245236837001,
+        "genuine_negativity": 0.3452245236837001,
+        "certifies_not_ppt_mixture": true
+      }
+    }
+  ],
+  "noise_thresholds": {
+    "noisy_GHZ3_modified_map": {
+      "map_threshold": 0.7333333338666668,
+      "H1_threshold": 0.9342667838399525,
+      "H2_threshold": 0.7333333346065902,
+      "H3_threshold": 0.7333333341115861
+    },
+    "noisy_W3_transposition_map": {
+      "map_threshold": 0.8988687435887552,
+      "H1_threshold": null,
+      "H2_threshold": 0.953490622389836,
+      "H3_threshold": 0.9004742808252777
+    }
+  }
+}
