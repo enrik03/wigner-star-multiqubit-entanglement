@@ -102,8 +102,7 @@ abogado del diablo); no sustituye un arbitraje externo.
 3. Decidir si el envio inicial sera esta version arXiv espanola o una version
    inglesa simultanea.
 4. Aprobar autoria, contribuciones, afiliaciones y declaraciones.
-5. Elegir repositorio y DOI antes de sustituir el texto provisional de
-   disponibilidad de codigo.
+5. Archivar una version estable del repositorio publico con DOI antes del envio.
 
 ## Camino corto a EPJ Plus
 
